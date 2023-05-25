@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from "react-router-dom";
+import Back from '../components/Back';
+import Map from '../components/Map';
+import InfoCard from '../components/InfoCard';
 import Error from './Error'
 
 export default function DataAdminIEGReducedPrice() {
@@ -17,6 +20,12 @@ export default function DataAdminIEGReducedPrice() {
         await setData(json[0])
     }
 
+    // const getData = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/reducedmeals/${id}`);
+    //     const json = await response.json();
+    //     await setData(json[0])
+    // }
+
   
     useEffect(() => {
         getData();
@@ -30,7 +39,13 @@ export default function DataAdminIEGReducedPrice() {
     return (
 
         <>
-            <div className='container'>
+            <div className='container guideline_container'>
+            <div className='info_buttons'>
+                    <Back />
+                    <div className='info_hover'> 
+                        <Map location='Income Eligibility Guidelines Forms - Reduced Priced Meals'/>
+                    </div>
+                </div>
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Reduced Price Meals</h4>
             { user.role == 'Data Admin' && <Link to={`/datarededit/${id}`}><button className="button radius">Edit Guidelines</button></Link> }

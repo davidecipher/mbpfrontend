@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SignatureCanvas from 'react-signature-canvas';
 
 export default function ClientForm() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -9,6 +10,7 @@ export default function ClientForm() {
     const [childOneForsterChild, setChildOneFosterChild] = useState(false);
     const [childOneRunaway, setChildOneRunaway] = useState(false);
     const [childOneHomeless, setChildOneHomeless] = useState(false);
+    const [childOneAge, setChildOneAge] = useState('');
 
     const [childTwoName, setChildTwoName] = useState('');
     const [childTwoID, setChildTwoID] = useState('');
@@ -16,6 +18,7 @@ export default function ClientForm() {
     const [childTwoForsterChild, setChildTwoFosterChild] = useState(false);
     const [childTwoRunaway, setChildTwoRunaway] = useState(false);
     const [childTwoHomeless, setChildTwoHomeless] = useState(false);
+    const [childTwoAge, setChildTwoAge] = useState('');
 
     const [childThreeName, setChildThreeName] = useState('');
     const [childThreeID, setChildThreeID] = useState('');
@@ -23,6 +26,7 @@ export default function ClientForm() {
     const [childThreeForsterChild, setChildThreeFosterChild] = useState(false);
     const [childThreeRunaway, setChildThreeRunaway] = useState(false);
     const [childThreeHomeless, setChildThreeHomeless] = useState(false);
+    const [childThreeAge, setChildThreeAge] = useState('');
 
     const [childFourName, setChildFourName] = useState('');
     const [childFourID, setChildFourID] = useState('');
@@ -30,6 +34,7 @@ export default function ClientForm() {
     const [childFourForsterChild, setChildFourFosterChild] = useState(false);
     const [childFourRunaway, setChildFourRunaway] = useState(false);
     const [childFourHomeless, setChildFourHomeless] = useState(false);
+    const [childFourAge, setChildFourAge] = useState('');
 
     const [childFiveName, setChildFiveName] = useState('');
     const [childFiveID, setChildFiveID] = useState('');
@@ -37,6 +42,7 @@ export default function ClientForm() {
     const [childFiveForsterChild, setChildFiveFosterChild] = useState(false);
     const [childFiveRunaway, setChildFiveRunaway] = useState(false);
     const [childFiveHomeless, setChildFiveHomeless] = useState(false);
+    const [childFiveAge, setChildFiveAge] = useState('');
 
     const [childSixName, setChildSixName] = useState('');
     const [childSixID, setChildSixID] = useState('');
@@ -44,9 +50,10 @@ export default function ClientForm() {
     const [childSixForsterChild, setChildSixFosterChild] = useState(false);
     const [childSixRunaway, setChildSixRunaway] = useState(false);
     const [childSixHomeless, setChildSixHomeless] = useState(false);
+    const [childSixAge, setChildSixAge] = useState('');
 
     const [childIncome, setChildIncome] = useState('');
-    const [childIncomeFreq, setChildIncomeFreq] = useState('');
+    const [childIncomeFreq, setChildIncomeFreq] = useState('Weekly');
 
     const [HouseholdMemberOneName, setHouseholdMemberOneName] = useState('')
     const [HouseholdMemberOneWorkEarnings, setHouseholdMemberOneEarnings] = useState('');
@@ -131,14 +138,78 @@ export default function ClientForm() {
     const [free, setFree] = useState(null);
     const [reduced, setReduced] = useState(null);
 
+    const [sign, setSign] = useState();
+    const [image, setImage] = useState();
+    
+    const [offSign, setOffSign] = useState();
+    const [offImage, setOffImage] = useState();
+    const [offSignature, setOffSignature] = useState();
+
+    const [memberOneIncomeFreq, setMemberOneIncomeFreq] = useState('Weekly');
+    const [memberTwoIncomeFreq, setMemberTwoIncomeFreq] = useState('Weekly');
+    const [memberThreeIncomeFreq, setMemberThreeIncomeFreq] = useState('Weekly');
+    const [memberFourIncomeFreq, setMemberFourIncomeFreq] = useState('Weekly');
+    const [memberFiveIncomeFreq, setMemberFiveIncomeFreq] = useState('Weekly');
+    const [memberSixIncomeFreq, setMemberSixIncomeFreq] = useState('Weekly');
+
+
+
+    const handleClear = () => {
+        sign.clear();
+        setImage('');
+        setSignature('');
+    }
+
+    const handleSave = () => {
+        const saved = sign.getTrimmedCanvas().toDataURL('image/png');
+
+        if(saved){
+            setImage(saved);
+            sign.clear();
+
+            setSignature(saved);
+        }
+
+    }   
+    const handleOffClear = () => {
+        sign.clear();
+        setOffImage('');
+        setOffSignature('');
+    }
+
+    const handleOffSave = () => {
+        const saved = offSign.getTrimmedCanvas().toDataURL('image/png');
+
+        if(saved){
+            setOffImage(saved);
+            offSign.clear();
+
+            setOffSignature(saved);
+        }
+
+    }   
+
+
+    // const getFreeMeal = async () => {
+    //     const response = await fetch(`https://mbp-server.onrender.com/api/freemeals/${user.branch}`);
+    //     const json = await response.json();
+    //     setFree(json[0]);
+    // }
+
     const getFreeMeal = async () => {
-        const response = await fetch(`https://mbp-server.onrender.com/api/freemeals/${user.branch}`);
+        const response = await fetch(`http://localhost:3001/api/freemeals/${user.branch}`);
         const json = await response.json();
         setFree(json[0]);
     }
 
+    // const getReducedMeal = async () => {
+    //     const response = await fetch(`https://mbp-server.onrender.com/api/reducedmeals/${user.branch}`);
+    //     const json = await response.json();
+    //     setReduced(json[0]);
+    // }
+
     const getReducedMeal = async () => {
-        const response = await fetch(`https://mbp-server.onrender.com/api/reducedmeals/${user.branch}`);
+        const response = await fetch(`http://localhost:3001/api/reducedmeals/${user.branch}`);
         const json = await response.json();
         setReduced(json[0]);
     }
@@ -182,101 +253,275 @@ export default function ClientForm() {
         }
     }
 
+    const [signErr, setSignErr] = useState(false);
+    const [OffSignErr, setOffSignErr] = useState(false);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const branch = user.branch;
         const day = new Date();
         const date = day.toLocaleDateString();
+
+        if(!signature && !offSignature){
+            setSignErr(true); 
+            setOffSignErr(true);
+
+            setTimeout(() => {
+                setSignErr(false); 
+                setOffSignErr(false);
+            }, 1400)
+            return;
+        }
+
+        if(!signature){
+            setSignErr(true);
+            return;
+        }
     
+        if(!offSignature){
+            setSignErr(true);
+            return;
+        }
        
         const oneEarnings = isNaN(parseInt(HouseholdMemberOneWorkEarnings)) ? 0 : parseInt(HouseholdMemberOneWorkEarnings);
         const oneWelfare = isNaN(parseInt(HouseholdMemberOneWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberOneWelfare_Alimony_CS);
         const oneSSPR = isNaN(parseInt(HouseholdMemberOneSSPR)) ? 0 : parseInt(HouseholdMemberOneSSPR);
         const oneOther= isNaN(parseInt(HouseholdMemberOneOther)) ? 0 : parseInt(HouseholdMemberOneOther);
 
-        const oneTotal = oneEarnings + oneWelfare + oneSSPR + oneOther;
+        let oneTotal = oneEarnings + oneWelfare + oneSSPR + oneOther;
 
         const twoEarnings = isNaN(parseInt(HouseholdMemberTwoWorkEarnings)) ? 0 : parseInt(HouseholdMemberTwoWorkEarnings);
         const twoWelfare = isNaN(parseInt(HouseholdMemberTwoWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberTwoWelfare_Alimony_CS);
         const twoSSPR = isNaN(parseInt(HouseholdMemberTwoSSPR)) ? 0 : parseInt(HouseholdMemberTwoSSPR);
         const twoOther= isNaN(parseInt(HouseholdMemberTwoOther)) ? 0 : parseInt(HouseholdMemberTwoOther);
 
-        const twoTotal = twoEarnings + twoWelfare + twoSSPR + twoOther;
+        let twoTotal = twoEarnings + twoWelfare + twoSSPR + twoOther;
        
         const threeEarnings = isNaN(parseInt(HouseholdMemberThreeWorkEarnings)) ? 0 : parseInt(HouseholdMemberThreeWorkEarnings);
         const threeWelfare = isNaN(parseInt(HouseholdMemberThreeWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberThreeWelfare_Alimony_CS);
         const threeSSPR = isNaN(parseInt(HouseholdMemberThreeSSPR)) ? 0 : parseInt(HouseholdMemberThreeSSPR);
         const threeOther= isNaN(parseInt(HouseholdMemberThreeOther)) ? 0 : parseInt(HouseholdMemberThreeOther);
 
-        const threeTotal = threeEarnings + threeWelfare + threeSSPR + threeOther;
+        let threeTotal = threeEarnings + threeWelfare + threeSSPR + threeOther;
 
         const fourEarnings = isNaN(parseInt(HouseholdMemberFourWorkEarnings)) ? 0 : parseInt(HouseholdMemberFourWorkEarnings);
         const fourWelfare = isNaN(parseInt(HouseholdMemberFourWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberFourWelfare_Alimony_CS);
         const fourSSPR = isNaN(parseInt(HouseholdMemberFourSSPR)) ? 0 : parseInt(HouseholdMemberFourSSPR);
         const fourOther= isNaN(parseInt(HouseholdMemberFourOther)) ? 0 : parseInt(HouseholdMemberFourOther);
 
-        const fourTotal = fourEarnings + fourWelfare + fourSSPR + fourOther;
+        let fourTotal = fourEarnings + fourWelfare + fourSSPR + fourOther;
 
         const fiveEarnings = isNaN(parseInt(HouseholdMemberFiveWorkEarnings)) ? 0 : parseInt(HouseholdMemberFiveWorkEarnings);
         const fiveWelfare = isNaN(parseInt(HouseholdMemberFiveWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberFiveWelfare_Alimony_CS);
         const fiveSSPR = isNaN(parseInt(HouseholdMemberFiveSSPR)) ? 0 : parseInt(HouseholdMemberFiveSSPR);
         const fiveOther= isNaN(parseInt(HouseholdMemberFiveOther)) ? 0 : parseInt(HouseholdMemberFiveOther);
 
-        const fiveTotal = fiveEarnings + fiveWelfare + fiveSSPR + fiveOther;
+        let fiveTotal = fiveEarnings + fiveWelfare + fiveSSPR + fiveOther;
 
         const sixEarnings = isNaN(parseInt(HouseholdMemberSixWorkEarnings)) ? 0 : parseInt(HouseholdMemberSixWorkEarnings);
         const sixWelfare = isNaN(parseInt(HouseholdMemberSixWelfare_Alimony_CS)) ? 0 : parseInt(HouseholdMemberSixWelfare_Alimony_CS);
         const sixSSPR = isNaN(parseInt(HouseholdMemberSixSSPR)) ? 0 : parseInt(HouseholdMemberSixSSPR);
         const sixOther= isNaN(parseInt(HouseholdMemberSixOther)) ? 0 : parseInt(HouseholdMemberSixOther);
 
-        const sixTotal = sixEarnings + sixWelfare + sixSSPR + sixOther;
+        let sixTotal = sixEarnings + sixWelfare + sixSSPR + sixOther;
 
-        const finalTotal = (oneTotal + twoTotal + threeTotal + fourTotal + fiveTotal + sixTotal) * 12;
+        const determineFreq = () => {
+            // One
+            if(memberOneIncomeFreq == 'Weekly'){
+                oneTotal = oneTotal * 52
+            }
+
+            if(memberOneIncomeFreq == 'Bi-Weekly'){
+                oneTotal = oneTotal * 26
+            }
+            if(memberOneIncomeFreq == 'Monthly'){
+                oneTotal = oneTotal * 12
+            }
+
+            if(memberOneIncomeFreq == 'Annually'){
+                oneTotal = oneTotal * 1
+            }
+
+            // Two
+            
+            if(memberTwoIncomeFreq == 'Weekly'){
+                twoTotal = twoTotal * 52
+            }
+            if(memberTwoIncomeFreq == 'Bi-Weekly'){
+                twoTotal = twoTotal * 26
+            }
+
+            if(memberTwoIncomeFreq == 'Monthly'){
+                twoTotal = twoTotal * 12
+            }
+
+            if(memberTwoIncomeFreq == 'Annually'){
+                twoTotal = twoTotal * 1
+            }
+
+            // Three
+            if(memberThreeIncomeFreq == 'Weekly'){
+                threeTotal = threeTotal * 52
+            }
+
+            if(memberThreeIncomeFreq == 'Bi-Weekly'){
+                threeTotal = threeTotal * 26
+            }
+            if(memberThreeIncomeFreq == 'Monthly'){
+                threeTotal = threeTotal * 12
+            }
+
+            if(memberThreeIncomeFreq == 'Annually'){
+                threeTotal = threeTotal * 1
+            }
+
+            // Four 
+
+            if(memberFourIncomeFreq == 'Weekly'){
+                fourTotal = fourTotal * 52
+            }
+
+            if(memberFourIncomeFreq == 'Bi-Weekly'){
+                fourTotal = fourTotal * 26
+            }
+            if(memberFourIncomeFreq == 'Monthly'){
+                fourTotal = fourTotal * 12
+            }
+
+            if(memberFourIncomeFreq == 'Annually'){
+                fourTotal = fourTotal * 1
+            }
+
+            // Five
+
+            if(memberFiveIncomeFreq == 'Weekly'){
+                fiveTotal = fiveTotal * 52
+            }
+
+            if(memberFiveIncomeFreq == 'Bi-Weekly'){
+                fiveTotal = fiveTotal * 26
+            }
+            if(memberFiveIncomeFreq == 'Monthly'){
+                fiveTotal = fiveTotal * 12
+            }
+
+            if(memberFiveIncomeFreq == 'Annually'){
+                fiveTotal = fiveTotal * 1
+            }
+
+            // Two
+
+            if(memberSixIncomeFreq == 'Weekly'){
+                sixTotal = sixTotal * 52
+            }
+
+            if(memberSixIncomeFreq == 'Bi-Weekly'){
+                sixTotal = sixTotal * 26
+            }
+            if(memberSixIncomeFreq == 'Monthly'){
+                sixTotal = sixTotal * 12
+            }
+
+            if(memberSixIncomeFreq == 'Annually'){
+                sixTotal = sixTotal * 1
+            }
+
+        }
+        determineFreq();
+
+        const finalTotal = oneTotal + twoTotal + threeTotal + fourTotal + fiveTotal + sixTotal;
 
 
         const arg = parseInt(totalHouseHoldMembers);
         const eligibility = determineEligibility(arg, finalTotal);
 
+        const createRoster = async (childName, childAge) => {
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            const date = new Date();
+
+            if(childName != ''){
+                const form = {
+                    branch,
+                    month: months[date.getMonth()],
+                    name: childName,
+                    age: childAge,
+                    title_xx: 'N/A',
+                    date: new Date().toLocaleDateString(),
+                    date_exited: 'N/A',
+                    ieg_enrolledment_on_file: 'Y',
+                    date_ieg_signed: new Date().toLocaleDateString(),
+                    eligibility: eligibility
+                }
+
+                const response = await fetch('http://localhost:3001/api/children', {
+                    method: 'POST',
+                    body: JSON.stringify(form),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const json = await response.json();
+
+               
+            }
+        };
+
+        createRoster(childOneName, childOneAge);
+        createRoster(childTwoName, childTwoAge);
+        createRoster(childThreeName, childThreeAge);
+        createRoster(childFourName, childFourAge);
+        createRoster(childFiveName, childFiveAge);
+        createRoster(childSixName, childSixAge);
+
+
         const form = {
             branch,
             eligibility,
             childOneName,
-            childOneID,
+            childOneID, 
             childOneHeadStart,
             childOneForsterChild,
             childOneRunaway,
             childOneHomeless,
+            childOneAge,
             childTwoName,
             childTwoID,
             childTwoHeadStart,
             childTwoForsterChild,
             childTwoRunaway,
             childTwoHomeless,
+            childTwoAge,
             childThreeName,
             childThreeID,
             childThreeHeadStart,
             childThreeForsterChild,
             childThreeRunaway,
             childThreeHomeless,
+            childThreeAge,
             childFourName,
             childFourID,
             childFourHeadStart,
             childFourForsterChild,
             childFourRunaway,
             childFourHomeless,
+            childFourAge,
             childFiveName,
             childFiveID,
             childFiveHeadStart,
             childFiveForsterChild,
             childFiveRunaway,
             childFiveHomeless,
+            childFiveAge,
             childSixName,
             childSixID,
             childSixHeadStart,
             childSixForsterChild,
             childSixRunaway,
             childSixHomeless,
+            childSixAge,
             childIncome,
             childIncomeFreq,
             HouseholdMemberOneName,
@@ -324,6 +569,7 @@ export default function ClientForm() {
             supper,
             snack,
             signature,
+            offSignature,
             printName,
             address,
             date,
@@ -337,12 +583,26 @@ export default function ClientForm() {
             white,
             black,
             indian,
-            hawaiian
+            hawaiian,
+            memberOneIncomeFreq,
+            memberTwoIncomeFreq,
+            memberThreeIncomeFreq,
+            memberFourIncomeFreq,
+            memberFiveIncomeFreq,
+            memberSixIncomeFreq
         };
 
         try{
 
-            const response = await fetch('https://mbp-server.onrender.com/api/clients', {
+            // const response = await fetch('https://mbp-server.onrender.com/api/clients', {
+            //     method: 'POST',
+            //     body: JSON.stringify(form),
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // });
+
+            const response = await fetch('http://localhost:3001/api/clients', {
                 method: 'POST',
                 body: JSON.stringify(form),
                 headers: {
@@ -350,8 +610,12 @@ export default function ClientForm() {
                 }
             });
             const json = await response.json();
-    
+            
+            window.location.assign('/');
+
             if(response.ok){
+                setSign('');
+                setSignature('');
                 setChildOneName('');
                 setChildOneID('');
                 setChildTwoName('');
@@ -395,13 +659,16 @@ export default function ClientForm() {
                 setHouseholdMemberSixWelfare_Alimony_CS('');
                 setHouseholdMemberSixSSPR('');
                 setHouseholdMemberSixOther('');
+                setTotalHouseHoldMembers('')
                 setTotalHouseHoldIncome('');
                 setSsn('');
                 setSignature('');
+                setImage(false);
+                setAddress(' ')
                 setPrintName('');
                 setDate('');
-                setAddress('');
                 setCity('');
+                setAddress('');
                 setZipCode('');
                 setPhoneNumber('');
                 setState('');
@@ -449,7 +716,6 @@ export default function ClientForm() {
                 setWhite(false);
                 setIndian(false);
                 setHawaiian(false);
-                window.location.assign('/');
 
                 if(!response.ok){
                     setError(json.error);
@@ -462,7 +728,6 @@ export default function ClientForm() {
 
        
     }
-
 
     
 
@@ -500,8 +765,9 @@ export default function ClientForm() {
             
             <div className='flex'>
                 <div className="input_field"> 
-                    <input type='text' placeholder="  Child Name" className="first_field" value={childOneName} onChange={(e) => setChildOneName(e.target.value)}/>
-                    <input type='text' className="last_field" value={childOneID} onChange={(e) => setChildOneID(e.target.value)}/>
+                    <input type='text' placeholder="  Child Name" className="first_field" value={childOneName} onChange={(e) => setChildOneName(e.target.value)} required/>
+                    <input type='text' placeholder='Age' className='age_input' value={childOneAge} onChange={(e) => setChildOneAge(e.target.value)} required/>
+                    <input type='text' className="last_field" value={childOneID} onChange={(e) => setChildOneID(e.target.value)} required/>
                 </div>
                 
                 <div className="checkboxes">
@@ -539,6 +805,7 @@ export default function ClientForm() {
             <div className='flex'>
                 <div className="input_field"> 
                     <input type='text' className="first_field" placeholder="  Child Name" value={childTwoName} onChange={(e) => setChildTwoName(e.target.value)}/>
+                    <input type='text' placeholder='Age' className='age_input'  value={childTwoAge} onChange={(e) => setChildTwoAge(e.target.value)}/>
                     <input type='text' className="last_field" value={childTwoID} onChange={(e) => setChildTwoID(e.target.value)}/>
                 </div>
                 
@@ -577,6 +844,7 @@ export default function ClientForm() {
             <div className='flex'>
                 <div className="input_field"> 
                     <input type='text' className="first_field" placeholder="  Child Name" value={childThreeName} onChange={(e) => setChildThreeName(e.target.value)}/>
+                    <input type='text' placeholder='Age' className='age_input' value={childThreeAge} onChange={(e) => setChildThreeAge(e.target.value)}/>
                     <input type='text' className="last_field" value={childThreeID} onChange={(e) => setChildThreeID(e.target.value)}/>
                 </div>
                 
@@ -615,6 +883,7 @@ export default function ClientForm() {
             <div className='flex'>
                 <div className="input_field"> 
                     <input type='text' className="first_field" value={childFourName} placeholder="  Child Name" onChange={(e) => setChildFourName(e.target.value)}/>
+                    <input type='text' placeholder='Age' className='age_input' value={childFourAge} onChange={(e) => setChildFourAge(e.target.value)}/>
                     <input type='text' className="last_field" value={childFourID} onChange={(e) => setChildFourID(e.target.value)}/>
                 </div>
                 
@@ -653,6 +922,7 @@ export default function ClientForm() {
             <div className='flex'>
                 <div className="input_field"> 
                     <input type='text' className="first_field" placeholder="  Child Name" value={childFiveName} onChange={(e) => setChildFiveName(e.target.value)}/>
+                    <input type='text' placeholder='Age' className='age_input' value={childFiveAge} onChange={(e) => setChildFiveAge(e.target.value)}/>
                     <input type='text' className="last_field" value={childFiveID} onChange={(e) => setChildFiveID(e.target.value)}/>
                 </div>
                 
@@ -691,6 +961,7 @@ export default function ClientForm() {
             <div className='flex'>
                 <div className="input_field"> 
                     <input type='text' className="first_field" placeholder="  Child Name" value={childSixName} onChange={(e) => setChildSixName(e.target.value)}/>
+                    <input type='text' placeholder='Age' className='age_input' value={childSixAge} onChange={(e) => setChildSixAge(e.target.value)}/>
                     <input type='text' className="last_field" value={childSixID} onChange={(e) => setChildSixID(e.target.value)}/>
                 </div>
                 
@@ -734,10 +1005,17 @@ export default function ClientForm() {
                     Please indicate the TOTAL income received by child household members listed in 
                     PART I here.
                 </p>
-                <label>Child Income</label>
+                <label>Child Monthly Income</label>
                 <input type='number' value={childIncome} onChange={(e) => setChildIncome(e.target.value)}/>
-                <label>How often?</label>
-                <input type='text' value={childIncomeFreq} onChange={(e) => setChildIncomeFreq(e.target.value)}/>
+                    <label>How Often?</label>
+                    <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => setChildIncomeFreq(e.target.value)}>
+                        <option>Weekly</option>
+                        <option>Bi-Weekly</option>
+                        <option>Monthly</option>
+                        <option>Yearly</option>
+                    </select>
+                {/* <label>How often?</label>
+                <input type='text' value={childIncomeFreq} onChange={(e) => setChildIncomeFreq(e.target.value)}/> */}
             </div>
 
             <div className="part_b">
@@ -752,13 +1030,13 @@ export default function ClientForm() {
 
                 <div className="form_list">
                     <div className="form_line">
-                        <div className='bottom'>
+                        {/* <div className='bottom'>
                             <i>Please enter estimated monthly income</i>
-                        </div>
+                        </div> */}
 
                         <h4>Member</h4>
                         <label>Name of Other Household Member: </label>
-                        <input type='text' className="part_b_main_field" value={HouseholdMemberOneName} onChange={(e) => setHouseholdMemberOneName(e.target.value)}/>
+                        <input type='text' className="part_b_main_field" value={HouseholdMemberOneName} onChange={(e) => setHouseholdMemberOneName(e.target.value)} required/>
                         <label>Earnings from work before deductions: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberOneWorkEarnings} onChange={(e) => setHouseholdMemberOneEarnings(e.target.value)}/>
                         <label>Welfare, child support, alimony: </label>
@@ -767,6 +1045,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberOneSSPR} onChange={(e) => setHouseholdMemberOneSSPR(e.target.value)}/>
                         <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberOneOther} onChange={(e) => setHouseholdMemberOneOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberOneIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
 
                     
@@ -783,6 +1068,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberTwoSSPR} onChange={(e) => setHouseholdMemberTwoSSPR(e.target.value)}/>
                         <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberTwoOther} onChange={(e) => setHouseholdMemberTwoOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberTwoIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
 
                     <div className="form_line">
@@ -798,6 +1090,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberThreeSSPR} onChange={(e) => setHouseholdMemberThreeSSPR(e.target.value)}/>
                         <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberThreeOther} onChange={(e) => setHouseholdMemberThreeOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberThreeIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
 
                     <div className="form_line">
@@ -813,6 +1112,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberFourSSPR} onChange={(e) => setHouseholdMemberFourSSPR(e.target.value)}/>
                         <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberFourOther} onChange={(e) => setHouseholdMemberFourOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberFourIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
 
                     <div className="form_line">
@@ -828,6 +1134,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberFiveSSPR} onChange={(e) => setHouseholdMemberFiveSSPR(e.target.value)}/>
                         <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberFiveOther} onChange={(e) => setHouseholdMemberFiveOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberFiveIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
                     
                     <div className="form_line">
@@ -843,6 +1156,13 @@ export default function ClientForm() {
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberSixSSPR} onChange={(e) => setHouseholdMemberSixSSPR(e.target.value)}/>
                          <label>All other income: </label>
                         <input type='number' placeholder="$" className="part_b_field_1" value={HouseholdMemberSixOther} onChange={(e) => setHouseholdMemberSixOther(e.target.value)}/>
+                        <label style={{ marginRight: '0.3rem'}}>Income Frequency:</label>
+                        <select style={{height: '1.3rem', fontSize: '1rem;'}} onChange={(e) => {setMemberSixIncomeFreq(e.target.value)}}>
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
                     </div>
 
                 </div>
@@ -960,12 +1280,10 @@ export default function ClientForm() {
             </div>
 
             <div className="info">
-                
-                <label>Signature</label>
-                <input type='text' className="right bottom" value={signature} onChange={(e) => setSignature(e.target.value)}/>
 
+            <div style={{ maxWidth: '6rem'}}>
                 <label>Print Name</label>
-                <input type='text'  className="right bottom" value={printName} onChange={(e) => setPrintName(e.target.value)}/>
+                <input type='text'  className="right bottom" value={printName} onChange={(e) => setPrintName(e.target.value)} required/>
                 
                 {/* <label>Date</label>
                 <input type='date' className="right bottom" value={date} onChange={(e) => setDate(e.target.value)} /> */}
@@ -984,6 +1302,26 @@ export default function ClientForm() {
 
                 <label>Phone Number</label>
                 <input type='number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+            </div>
+
+                <div>
+                   { signErr && <h6 style={{color: 'red'}}>Please Input Signature</h6> }
+                    <label>Signature</label>
+                    <div style={{border: '2px solid black', width: '12rem', height: '96px'}} className='sign_pad'>    
+                        <SignatureCanvas 
+                            ref={data => setSign(data)}
+                            canvasProps={{width: 287, height: 92, className: 'sigCanvas'}}
+                        />
+
+                        { image && <div className='sign_preview'>
+                            <img src={image} alt='signature' />
+                        </div> }
+                    </div>
+                    <div className='sign_buttons'>
+                        <button className='button' type='button' onClick={handleSave}>Save</button>
+                        <button className='button' type='button' onClick={handleClear}>Clear</button>
+                    </div>
+                </div>
 
                 <p className="disclaimer red bottom">
                     *This application is a revision of USDA's newly released meal benefit prototype and meets all 
@@ -1025,7 +1363,26 @@ export default function ClientForm() {
                         <input type='checkbox' checked={hawaiian} onChange={() => setHawaiian(!hawaiian)} disabled={asian || white || black || indian}/>
                     </div>
                 </div>
+
             </div>
+                <div>
+                    { OffSignErr && <h6 style={{color: 'red'}}>Please Input Signature</h6> }
+                    <label>Official Signature</label>
+                    <div style={{border: '2px solid black', width: '12rem', height: '96px'}} className='sign_pad'>    
+                        <SignatureCanvas 
+                            ref={data => setOffSign(data)}
+                            canvasProps={{width: 287, height: 92, className: 'sigCanvas'}}
+                        />
+
+                        { offImage && <div className='sign_preview'>
+                            <img src={offImage} alt='signature' />
+                        </div> }
+                    </div>
+                    <div className='sign_buttons'>
+                        <button className='button' type='button' onClick={handleOffSave}>Save</button>
+                        <button className='button' type='button' onClick={handleOffClear}>Clear</button>
+                    </div>
+                </div>  
             <button className='button radius block padding'>Submit</button>
         </form>
         </>

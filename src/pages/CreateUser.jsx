@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
 import Error from './Error';
+import Back from '../components/Back';
+import { useParams } from 'react-router-dom';
+import InfoCard from '../components/InfoCard';
+import Map from '../components/Map';
 
 export default function SysAdminCreateBranch() {
+    const { id } = useParams();
+    
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -46,6 +52,14 @@ export default function SysAdminCreateBranch() {
             }
         });
 
+        // const response = await fetch('http://localhost:3001/api/users/signup', {
+        //     method: 'POST',
+        //     body: JSON.stringify(user),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+
         const data = await response.json();
 
         if(!response.ok){
@@ -68,7 +82,9 @@ export default function SysAdminCreateBranch() {
 
             setTimeout(() => {
                 setSet(false);
-            }, 3000)
+            }, 3000);
+
+            window.location.assign(`/branch/${id}`)
         }
 
     }
@@ -82,6 +98,15 @@ export default function SysAdminCreateBranch() {
 
     }
 
+    // const getBranches = async() => {
+    //     const response = await fetch('http://localhost:3001/api/branches');
+    //     const json = await response.json();
+    //     setBranchOptions(json);
+    //     setBranch(json[0]._id);
+
+
+    // }
+
 
     useEffect(() => {
         getBranches();
@@ -94,7 +119,13 @@ export default function SysAdminCreateBranch() {
     return(
         <>
             <div className='container'>
-                <div className="new_branch">
+            <div className='info_buttons'>
+                <Back />
+                <div className='info_hover'> 
+                <Map location='Create New Branch User Screen'/>
+                </div>
+            </div>
+                <div className="new_branch" style={{ 'margin': '0'}}>
                     <h4 className="block1x ">Create New User</h4>
                     <form onSubmit={handleSubmit}>
                         {

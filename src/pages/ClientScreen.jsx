@@ -9,7 +9,7 @@ export default function ClientScreen() {
 
     return(
         <>
-        <div className='container'>
+        <div className='container guideline_container'>
             <ClientForm />
         </div>
         </>

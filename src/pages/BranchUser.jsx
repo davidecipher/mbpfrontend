@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Error from './Error'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import Map from '../components/Map';
+import Back from '../components/Back';
+import InfoCard from '../components/InfoCard';
 
 export default function BranchUser() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -18,24 +21,28 @@ export default function BranchUser() {
 
     const getBranchName = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/branches/${user.branch}`);
+        // const response = await fetch(`http://localhost:3001/api/branches/${user.branch}`);
         const json = await response.json();
         setBranchName(json.name); 
     }
 
     const getFreeMeal = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/freemeals/${user.branch}`);
+        // const response = await fetch(`http://localhost:3001/api/freemeals/${user.branch}`);
         const json = await response.json();
         setFree(json[0]);
     }
 
     const getReducedMeal = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/reducedmeals/${user.branch}`);
+        // const response = await fetch(`http://localhost:3001/api/reducedmeals/${user.branch}`);
         const json = await response.json();
         setReduced(json[0]);
     }
 
     const getClients = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/clients/${user.branch}`);
+        // const response = await fetch(`http://localhost:3001/api/clients/${user.branch}`);
         const json = await response.json();
         setData(json);
     }
@@ -52,6 +59,9 @@ export default function BranchUser() {
     if(!free || !reduced){
         return (
         <div className='container'>
+                <div className='info_hover'> 
+                    <Map location='Branch User Main Screen'/>
+                </div>
             <div className='contact_admin'>
                 <h4>Please Contact a Data Admin to Set the guidelines for this branch</h4>
             </div>
@@ -63,6 +73,10 @@ export default function BranchUser() {
     return(
         <>
         <div className='container'>
+                <div className='info_hover'> 
+                    <Map location='Branch User Main Screen'/>
+                    <InfoCard description='This is the Branch User Screen, You can sign up clients, preview previously submitted client forms and preview both free and reduced price eligibility guidlines' />
+                </div>
             { click && <div className='guide_confirm'>
                     <h4 className='guide_confirm_title'>Which Guidelines You Want To View?</h4>
                     <div className='guide_confirm_buttons'>    
@@ -81,7 +95,10 @@ export default function BranchUser() {
                 </div>
 
                 <h3 className='block branch_subhead'>Submitted Client Forms</h3>
-                <Link to={`/client/${user.branch}`}><button className='button radius bottom'>Add Client</button></Link>
+                <div className='flex_button'>                    
+                    <Link to={`/client/${user.branch}`}><button className='button radius bottom'>Add Client</button></Link>
+                    <Link to={`/roster/${user.branch}`}><button className='button radius bottom'>View Roster</button></Link>
+                </div>
 
                 <table className='submitted_forms table_block'>
                     <thead>

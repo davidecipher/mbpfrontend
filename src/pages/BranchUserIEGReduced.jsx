@@ -1,7 +1,12 @@
+import Back from "../components/Back";
+import InfoCard from "../components/InfoCard";
+import Map from "../components/Map";
+
 export default function BranchUserIEGReduced() {
     return (
         <>
             <div className='container'>
+            
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Reduced Price Meals</h4>
 

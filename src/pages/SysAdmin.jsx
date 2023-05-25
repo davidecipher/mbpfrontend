@@ -3,6 +3,8 @@ import { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import View from '../icons/view.png';
 import Trash from '../icons/trash.png';
+import InfoCard from '../components/InfoCard';
+import Map from '../components/Map';
 
 
 export default function SysAdmin() {
@@ -17,8 +19,11 @@ export default function SysAdmin() {
     }
 
 
+
+
     const getBranches = async () => {
         const response = await fetch('https://mbp-server.onrender.com/api/branches');
+        // const response = await fetch('http://localhost:3001/api/branches');
         const data = await response.json();
         setBranches(data);
     }
@@ -27,6 +32,10 @@ export default function SysAdmin() {
         const response = await fetch(`https://mbp-server.onrender.com/api/branches/${id}`, {
             method: 'DELETE'
         });
+
+        // const response = await fetch(`http://localhost:3001/api/branches/${id}`, {
+        //     method: 'DELETE'
+        // });
 
         if(response.ok){
             const newBranches = branches.filter((branch) => branch._id !== id);
@@ -43,7 +52,6 @@ export default function SysAdmin() {
         <>
 
             <div className="container sysadmin">
-
                 { clicked && <div className='confirm'>
                     <h5>Are You Sure You Want to Delete {branchName} Branch?</h5>
                     <div className='confirm_buttons'>    
@@ -52,6 +60,10 @@ export default function SysAdmin() {
                     </div>
                 </div>
                 }
+            <div className='info_hover'> 
+                <Map location='System Administration Main Screen'/>
+                <InfoCard description='This is the System Adminstration Screen, You must create a Branch, then you can create users and assign roles to each users, preview, edit and delete users in each branch'/>    
+            </div>
                 <h2 className="block1x">System Adminstrator</h2>
                 <h4 className="block1x">Branches</h4>
                 <Link to='/sysbranch'>
@@ -74,7 +86,7 @@ export default function SysAdmin() {
                             setId(branch._id)
                             setClicked(true)
                             setBranchName(branch.name)
-                            }} disabled={clicked}>
+                        }} disabled={clicked}>
                             <img className='view_img' src={Trash}/>
                             Delete Branch
                         </button> 

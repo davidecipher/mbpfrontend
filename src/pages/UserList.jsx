@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Back from '../components/Back';
 import Error from './Error';
+import InfoCard from '../components/InfoCard';
+import Map from '../components/Map';
 
 
 export default function UserList(){
@@ -16,11 +19,23 @@ export default function UserList(){
         setData(json);
     }
 
+    // const getUsers = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/users/${id}`);
+    //     const json = await response.json();
+    //     setData(json);
+    // }
+
     const getBranchName = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/branches/${id}`);
         const json = await response.json();
         setBranchName(json.name);
     }
+
+    // const getBranchName = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/branches/${id}`);
+    //     const json = await response.json();
+    //     setBranchName(json.name);
+    // }
 
     useEffect(() => {
         getUsers();
@@ -31,6 +46,14 @@ export default function UserList(){
         return(
 
             <>
+            <div className="container">
+                <div className='info_buttons'>
+                        <Back />
+                        <div className='info_hover'> 
+                        <Map location='Branch User List Screen'/>
+                        </div>
+                </div>
+            </div>
                 <div className='no_users'>
                     <h3>No users have been created yet.</h3>
                     <Link to={`/createuser/${id}`}>
@@ -48,6 +71,12 @@ export default function UserList(){
         <div>
 
             <div className='container'>
+            <div className='info_buttons'>
+                <Back />
+                    <div className='info_hover'> 
+                    <Map location='Branch User List Screen'/>
+                    </div>
+                </div>
             <h3 className='user_list_header'>{branchName} Branch</h3>
             {user.role == 'System Admin' && 
             <Link to={`/createuser/${id}`}><button className='button radius'>

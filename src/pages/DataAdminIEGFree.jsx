@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from "react-router-dom";
+import Back from '../components/Back';
 import Error from './Error'
+import Map from '../components/Map';
+import InfoCard from '../components/InfoCard';
 
 export default function DataAdminIEGFree() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -16,6 +19,7 @@ export default function DataAdminIEGFree() {
 
     const getData = async () => {  
         const response = await fetch(`https://mbp-server.onrender.com/api/freemeals/${id}`);
+        // const response = await fetch(`http://localhost:3001/api/freemeals/${id}`);
         const json = await response.json();
         await setData(json[0])
 
@@ -32,7 +36,13 @@ export default function DataAdminIEGFree() {
     return (
 
         <>
-            <div className='container'>
+            <div className='container guideline_container'>
+                <div className='info_buttons'>
+                    <Back />
+                    <div className='info_hover'> 
+                        <Map location='Income Eligibility Guidelines Forms - Free Meals'/>
+                    </div>
+                </div>
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Free Meals</h4>
             { user.role == 'Data Admin' && <Link to={`/datafreeedit/${id}`}><button className="button radius">Edit Guidelines</button></Link> }

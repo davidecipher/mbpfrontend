@@ -1,29 +1,48 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, Link, json } from "react-router-dom";
 import { useEffect, useState } from 'react'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import Back from "../components/Back";
+import InfoCard from "../components/InfoCard";
+import Map from "../components/Map";
 
 export default function UserInfo() {
     const { id } = useParams();
     const [user, setUser] = useState([]);
     const [logs, setLogs] = useState([]);
 
+    const role = JSON.parse(localStorage.getItem('user')).role;
+
     const getData = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/users/singleuser/${id}`);
         const json = await response.json();
         setUser(json);
+
     } 
+
+    // const getData = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/users/singleuser/${id}`);
+    //     const json = await response.json();
+    //     setUser(json);
+    // } 
 
     const getLogs = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/logs/${id}`);
         const json = await response.json();
         setLogs(json);
     }
+
+    // const getLogs = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/logs/${id}`);
+    //     const json = await response.json();
+    //     setLogs(json);
+    // }
     
     
     useEffect(() => {
         getData();
         getLogs();
+        console.log(logs);
     }, [])
 
     return(
@@ -31,6 +50,13 @@ export default function UserInfo() {
         <div>
 
             <div className='container'>
+            <div className='info_buttons'>
+                <Back />
+                <div className='info_hover'> 
+                    <Map location='User Info Screen'/>
+                </div>
+            </div>
+            { role == 'System Admin' && <Link to={`/edituser/${id}`}><button className="button radius">Edit User</button></Link> }
                 <div className='user_info'>
                     <p>Name: { user.name }</p>
                     <p>Email: { user.email }</p>

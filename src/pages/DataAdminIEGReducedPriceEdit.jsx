@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Error from './Error';
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import Back from '../components/Back';
 
 export default function DataAdminIEGFreeEdit() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -40,6 +41,23 @@ export default function DataAdminIEGFreeEdit() {
         
     }
 
+    // const getData = async () => {
+    //     const response = await fetch(`http://localhost:3001/api/reducedmeals/${id}`);
+    //     const json = await response.json();
+    //     setData(json[0]);
+    //     setParam(json[0]._id);
+    //     setHouseHoldOne(json[0].houseHoldOne);
+    //     setHouseHoldTwo(json[0].houseHoldTwo);
+    //     setHouseHoldThree(json[0].houseHoldThree);
+    //     setHouseHoldFour(json[0].houseHoldFour);
+    //     setHouseHoldFive(json[0].houseHoldFive);
+    //     setHouseHoldSix(json[0].houseHoldSix);
+    //     setHouseHoldSeven(json[0].houseHoldSeven);
+    //     setHouseHoldEight(json[0].houseHoldEight);
+    //     setAdditionalHousehold(json[0].AdditionalHousehold);
+        
+    // }
+
     const editData = async (e) => {
         e.preventDefault();
 
@@ -63,6 +81,16 @@ export default function DataAdminIEGFreeEdit() {
                 'Content-Type': 'application/json'
             }
         });
+
+        // const response = await fetch(`http://localhost:3001/api/reducedmeals/${param}`, {
+        //     method: 'PUT',
+        //     body: JSON.stringify(form),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+
+
         const json = await response.json();
 
         if(response.ok){
@@ -83,7 +111,8 @@ export default function DataAdminIEGFreeEdit() {
 
     return (
         <>
-            <div className='container'>
+            <div className='container guideline_container '>
+                <Back />
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Reduced Price Meals</h4>
             <form onSubmit={editData}>

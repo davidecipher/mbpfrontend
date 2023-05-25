@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Back from '../components/Back';
 import Error from './Error';
 
 export default function DataAdminIEGFreeEdit() {
@@ -24,6 +25,7 @@ export default function DataAdminIEGFreeEdit() {
 
     const getData = async () => {
         const response = await fetch(`https://mbp-server.onrender.com/api/freemeals/${id}`);
+        // const response = await fetch(`http://localhost:3001/api/freemeals/${id}`);
         const json = await response.json();
 
 
@@ -65,6 +67,15 @@ export default function DataAdminIEGFreeEdit() {
                 'Content-Type': 'application/json'
             }
         });
+
+        // const response = await fetch(`http://localhost:3001/api/freemeals/${param}`, {
+        //     method: 'PUT',
+        //     body: JSON.stringify(form),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+        
         const json = await response.json();
 
         if(response.ok){
@@ -86,7 +97,8 @@ export default function DataAdminIEGFreeEdit() {
 
     return (
         <>
-            <div className='container'>
+            <div className='container guideline_container'>
+                <Back />
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Free Meals</h4>
             <form onSubmit={editData}>

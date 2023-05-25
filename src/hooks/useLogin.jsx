@@ -19,6 +19,15 @@ export const useLogin = () => {
                 'Content-Type': 'application/json'
             }
         }); 
+
+        // const response = await fetch('http://localhost:3001/api/users/login', {
+        //     method: 'POST',
+        //     body: JSON.stringify({ email, password }),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }); 
+
         const json = await response.json();
         setSent(response);
 

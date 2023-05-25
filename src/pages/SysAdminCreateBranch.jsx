@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Error from './Error';
-
+import Back from '../components/Back';
+import InfoCard from '../components/InfoCard';
+import Map from '../components/Map';
 
 export default function SysAdminCreateBranch() {
     const [name, setName] = useState('');
@@ -31,6 +33,14 @@ export default function SysAdminCreateBranch() {
             }
         });
 
+        // const response = await fetch('http://localhost:3001/api/branches', {
+        //     method: 'POST',
+        //     body: JSON.stringify(post),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+
         const json = await response.json();
 
         if(!response.ok){
@@ -47,7 +57,8 @@ export default function SysAdminCreateBranch() {
     
             setTimeout(() => {
                 setMessage('');
-            }, 3000)
+                window.location.assign('/');
+            }, 1500)
         }
     }
 
@@ -55,6 +66,12 @@ export default function SysAdminCreateBranch() {
         <>
 
             <div className='container'>
+                <div className='info_buttons'>
+                    <Back />
+                    <div className='info_hover'> 
+                    <Map location='System Administration Create Branch Screen'/>
+                    </div>
+                </div>
                 <div className="new_branch">
                     <h4 className="block1x ">Create New Branch</h4>
                     {message && 

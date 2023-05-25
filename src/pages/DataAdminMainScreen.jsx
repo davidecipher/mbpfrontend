@@ -1,7 +1,9 @@
 import ViewIcon from '../icons/view.png';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
-import Error from './Error'
+import Error from './Error';
+import Map from '../components/Map';
+import InfoCard from '../components/InfoCard';
 
 
 export default function DataAdminMainScrreen() {
@@ -17,6 +19,7 @@ export default function DataAdminMainScrreen() {
 
     const getBranches = async () => {
         const response = await fetch('https://mbp-server.onrender.com/api/branches');
+        // const response = await fetch('http://localhost:3001/api/branches');
         const data = await response.json();
         setBranches(data);
     }
@@ -29,6 +32,10 @@ export default function DataAdminMainScrreen() {
         <>
 
             <div className='container'>
+            <div className='info_hover'> 
+                    <Map location='Data Administrator Main Screen'/>
+                    <InfoCard description='This is the Data Adminstration Screen, You can preview all the previously created Branches and the users within them, you can also set and modify all the eligibility criteria for each branch'/>
+                </div>
                 { click && <div className='guide_confirm'>
                     <h4 className='guide_confirm_title'>Which Guidelines You Want To View?</h4>
                     <div className='guide_confirm_buttons'>    

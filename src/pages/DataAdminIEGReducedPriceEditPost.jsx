@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import RedirectHome from '../components/RedirectHome';
 
 export default function DataAdminIEGReducedPriceEditPost() {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -39,6 +40,14 @@ export default function DataAdminIEGReducedPriceEditPost() {
             }
         });
 
+        // const response = await fetch('http://localhost:3001/api/reducedmeals/', {
+        //     method: 'POST',
+        //     body: JSON.stringify(form),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
+
         const json = await response.json();
         
         if(response.ok){
@@ -56,7 +65,8 @@ export default function DataAdminIEGReducedPriceEditPost() {
 
     return(
         <>
-            <div className='container'>
+            <div className='container guideline_container'>
+                <RedirectHome />
             <h3 className="ieg_free">Income Eligibility Guidelines Form</h3>
             <h4 className="ieg_free">Free Meals</h4>
             { error && <div className='error_indicator'>
